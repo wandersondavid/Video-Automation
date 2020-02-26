@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/WandersonDavid/Video-Atomazicao/issues"
   },
-  "homepage": "https://github.com/WandersonDavid/Video-Atomazicao#readme"
+  "homepage": "https://github.com/WandersonDavid/Video-Atomazicao#readme",
+  "dependencies": {
+    "readline-sync": "^1.4.10"
+  }
 }
