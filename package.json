@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/WandersonDavid/Video-Atomazicao#readme",
   "dependencies": {
+    "algorithmia": "^0.3.10",
     "readline-sync": "^1.4.10"
   }
 }
