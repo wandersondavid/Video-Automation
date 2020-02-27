@@ -1,5 +1,5 @@
 const readline = require('readline-sync')
-const robots ={
+const robots = {
     text: require('./robots/text.js')
 }
 
@@ -15,7 +15,7 @@ function start() {
 
     function askAndReturnPrefix() {
         const prefixes = ['Who is', 'What is', 'The history of'];
-        const selectedPrefixIndex = readline.keyInSelect(prefixes, 'Choose on option: ') 
+        const selectedPrefixIndex = readline.keyInSelect(prefixes, 'Choose on option: ')
         const selectedPrefixText = prefixes[selectedPrefixIndex]
         return selectedPrefixText
     }
