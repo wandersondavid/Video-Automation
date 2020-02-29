@@ -3,12 +3,12 @@ const robots = {
     text: require('./robots/text.js')
 }
 
-function start() {
+async function start() {
     const content = {};
 
     content.searchTerm = askAndReturnSerachTerm();
     content.prefix = askAndReturnPrefix();
-    robots.text(content)
+    await robots.text(content)
     function askAndReturnSerachTerm() {
         return readline.question('Type a Wikipedia search term: ');
     }
