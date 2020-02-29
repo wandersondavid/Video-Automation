@@ -1,10 +1,10 @@
 const algorithmia = require('algorithmia')
-// const algorithmiaApiKey = require('../credentio/algorithmia.json')
-// console.log("**************",algorithmiaApiKey.apiKey,"***************************")
+const sentenceBoundaryDetection = require('sbd')
+
 async function robot(content) {
     await fetchContentFromWikipidia(content)
     sanitizeContent(content);
-    // breakContentIntoSenteces(content);
+    breakContentIntoSenteces(content);
 
     async function fetchContentFromWikipidia(content) {
 
@@ -19,8 +19,8 @@ async function robot(content) {
     function sanitizeContent(content) {
         const withoutBlankLinesAndMankLines = removeBlankLinesandMarkdom(content.sourceContentOriginal);
 
-        console.log(withoutBlankLinesAndMankLines);
-
+        // console.log(withoutBlankLinesAndMankLines);
+        content.sourceContentSanitized = withoutBlankLinesAndMankLines
         function removeBlankLinesandMarkdom(text) {
             const allLines = text.split('\n');
 
@@ -35,6 +35,17 @@ async function robot(content) {
 
         }
     }
+    function breakContentIntoSenteces(content){
+        content.sentences = []
 
+        const sentences = sentenceBoundaryDetection.sentences(content.sourceContentSanitized);
+        sentences.forEach((sentence)=>{
+            content.sentences.push({
+                text: sentence,
+                keywords: [],
+                images: []
+            })
+        })
+    }
 }
 module.exports = robot;
