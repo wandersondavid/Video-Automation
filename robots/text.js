@@ -4,7 +4,7 @@ const sentenceBoundaryDetection = require('sbd')
 const NaturalLanguageUnderstandingV1 = require('watson-developer-cloud/natural-language-understanding/v1.js')
 
 
-const watsonApiKey ={
+const watsonApiKey = {
     "apikey": "ezQVz6JQu3d8MHXfTy9HcXCyxewddNBFqAJpFfYMA1Rr",
     "iam_apikey_description": "Auto-generated for key 62c3275d-5a1e-4316-b864-6ebf3136cf35",
     "iam_apikey_name": "Auto-generated service credentials",
@@ -19,25 +19,25 @@ const nlu = new NaturalLanguageUnderstandingV1({
     ulr: "https://gateway-lon.watsonplatform.net/natural-language-understanding/api/v1/analyze?"
 })
 
-nlu.analyze({
-    text: `Search the world's information, including webpages, images, videos and more. Google has many special features to help you find exactly what you're looking`,
-    features: {
-        keywords: {}
-    }
-}, (error, response) => {
-    if (error) {
-        throw error
-    }
-    console.log(JSON.stringify(response, null, 4))
-    process.exit(0)
-})
-
-
+// nlu.analyze({
+//     text: `Search the world's information, including webpages, images, videos and more. Google has many special features to help you find exactly what you're looking`,
+//     features: {
+//         keywords: {}
+//     }
+// }, (error, response) => {
+//     if (error) {
+//         throw error
+//     }
+//     console.log(JSON.stringify(response, null, 4))
+//     process.exit(0)
+// })
 
 async function robot(content) {
     await fetchContentFromWikipidia(content)
     sanitizeContent(content);
     breakContentIntoSenteces(content);
+    limitMamimunSenteces(content)
+    await keywordsOfAllSentences(content)
 
     async function fetchContentFromWikipidia(content) {
 
@@ -76,6 +76,34 @@ async function robot(content) {
                 text: sentence,
                 keywords: [],
                 images: []
+            })
+        })
+    }
+
+    function limitMamimunSenteces(content) {
+        content.sentences = content.sentences.slice(0, content.maximumSentences)
+    }
+
+    async function keywordsOfAllSentences(content){
+        for (const sentence of content.sentences){
+            sentence.keywords = await watsonAndReturnKeywords(sentence.text)
+        }
+    }
+    async function watsonAndReturnKeywords(sentence) {
+        return new Promise((resolve, rejete) => {
+            nlu.analyze({
+                text: sentence,
+                features: {
+                    keywords: {}
+                }
+            }, (error, response) => {
+                if (error) {
+                    throw error
+                }
+                const keywords = response.keywords.map((keywords) => {
+                    return keywords.text
+                })
+                resolve(keywords)
             })
         })
     }
