@@ -37,6 +37,7 @@ async function robot(content) {
     sanitizeContent(content);
     breakContentIntoSenteces(content);
     limitMamimunSenteces(content)
+    await keywordsOfAllSentences(content)
 
     async function fetchContentFromWikipidia(content) {
 
@@ -83,7 +84,12 @@ async function robot(content) {
         content.sentences = content.sentences.slice(0, content.maximumSentences)
     }
 
-    await function watsonAndReturnKeywords(sentence) {
+    async function keywordsOfAllSentences(content){
+        for (const sentence of content.sentences){
+            sentence.keywords = await watsonAndReturnKeywords(sentence.text)
+        }
+    }
+    async function watsonAndReturnKeywords(sentence) {
         return new Promise((resolve, rejete) => {
             nlu.analyze({
                 text: sentence,
