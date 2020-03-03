@@ -19,20 +19,18 @@ const nlu = new NaturalLanguageUnderstandingV1({
     ulr: "https://gateway-lon.watsonplatform.net/natural-language-understanding/api/v1/analyze?"
 })
 
-nlu.analyze({
-    text: `Search the world's information, including webpages, images, videos and more. Google has many special features to help you find exactly what you're looking`,
-    features: {
-        keywords: {}
-    }
-}, (error, response) => {
-    if (error) {
-        throw error
-    }
-    console.log(JSON.stringify(response, null, 4))
-    process.exit(0)
-})
-
-
+// nlu.analyze({
+//     text: `Search the world's information, including webpages, images, videos and more. Google has many special features to help you find exactly what you're looking`,
+//     features: {
+//         keywords: {}
+//     }
+// }, (error, response) => {
+//     if (error) {
+//         throw error
+//     }
+//     console.log(JSON.stringify(response, null, 4))
+//     process.exit(0)
+// })
 
 async function robot(content) {
     await fetchContentFromWikipidia(content)
@@ -76,6 +74,25 @@ async function robot(content) {
                 text: sentence,
                 keywords: [],
                 images: []
+            })
+        })
+    }
+
+    await function watsonAndReturnKeywords(sentence){
+        return new Promise((resolve, rejete)=>{
+            nlu.analyze({
+                text: sentence,
+                features: {
+                    keywords: {}
+                }
+            }, (error, response) => {
+                if (error) {
+                    throw error
+                }
+                const keywords = response.keywords.map((keywords) =>{
+                    return keywords.text
+                })
+                resolve(keywords)
             })
         })
     }
