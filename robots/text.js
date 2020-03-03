@@ -27,6 +27,7 @@ async function robot(content) {
         content.sourceContentOriginal = wikipediaContent.content
 
     }
+
     function sanitizeContent(content) {
         const withoutBlankLinesAndMankLines = removeBlankLinesandMarkdom(content.sourceContentOriginal);
 
@@ -44,6 +45,7 @@ async function robot(content) {
 
         }
     }
+
     function breakContentIntoSenteces(content) {
         content.sentences = []
 
@@ -66,6 +68,7 @@ async function robot(content) {
             sentence.keywords = await watsonAndReturnKeywords(sentence.text)
         }
     }
+    
     async function watsonAndReturnKeywords(sentence) {
         return new Promise((resolve, rejete) => {
             nlu.analyze({
