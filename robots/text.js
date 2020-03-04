@@ -3,20 +3,24 @@ const sentenceBoundaryDetection = require('sbd')
 const watsonApiKey = require('../credentials/watson-nlu');
 const algorithmiaApiKey = require('../credentials/algorithimia.json')
 const NaturalLanguageUnderstandingV1 = require('watson-developer-cloud/natural-language-understanding/v1.js')
-
+const state = require('./state');
 const nlu = new NaturalLanguageUnderstandingV1({
     iam_apikey: watsonApiKey.apikey,
     version: '2018-11-16',
     ulr: "https://gateway-lon.watsonplatform.net/natural-language-understanding/api/v1/analyze?"
 })
 
-async function robot(content) {
+
+async function robot() {
+    const content = state.load()
+
     await fetchContentFromWikipidia(content)
     sanitizeContent(content);
     breakContentIntoSenteces(content);
     limitMamimunSenteces(content)
     await keywordsOfAllSentences(content)
 
+    state.save(content)
     async function fetchContentFromWikipidia(content) {
         
         const algorithmiaAuthenticated = algorithmia(algorithmiaApiKey.apikey);
@@ -68,7 +72,7 @@ async function robot(content) {
             sentence.keywords = await watsonAndReturnKeywords(sentence.text)
         }
     }
-    
+
     async function watsonAndReturnKeywords(sentence) {
         return new Promise((resolve, rejete) => {
             nlu.analyze({
