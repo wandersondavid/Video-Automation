@@ -5,12 +5,23 @@ const googleSearchCredentias = require('../credentials/search-google.json')
 
 async function robot() {
     const content = state.load();
+    await fetchImageOfAllSentences(content);
 
-    const imagesArry = await fechGoogleAndReturnImagesLinks('Google');
+    state.save(content);
 
-    console.log('======================================================')
-    console.dir(imagesArry, { depth: null })
-    process.exit(0)
+    async function fetchImageOfAllSentences(content) {
+      
+
+        for (const sentence of content.sentences) {
+            console.log("======================teste Aqui====================")
+            console.log(sentence.keywords[0])
+            console.log("======================teste====================")
+            const query = `${content.searchTerm}`//`${content.searchTerm} ${sentence.keywords[0]}`
+            sentence.images = await fechGoogleAndReturnImagesLinks(query)
+
+            sentence.googleSearchQuery = query
+        }
+    }
 
     async function fechGoogleAndReturnImagesLinks(query) {
         const response = await customSearch.cse.list({
