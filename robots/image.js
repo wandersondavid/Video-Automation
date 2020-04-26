@@ -11,8 +11,8 @@ async function robot() {
     // await downloadAllImages(content);
     // await convertAllImages(content)
 
-    await createAllSenteceImages(content)
-
+    // await createAllSenteceImages(content)
+    await createYoutubeThumbnail()
     // state.save(content);
 
     async function fetchImageOfAllSentences(content) {
@@ -118,7 +118,7 @@ async function robot() {
     }
 
     async function createSentenceImage(sentenceIndex, sentenceText) {
-        
+
         return new Promise((resolve, reject) => {
             const outputFile = `./content/${sentenceIndex}-sentence.png`
 
@@ -168,6 +168,21 @@ async function robot() {
 
                 console.log(`> [video-robot] Sentence created: ${outputFile}`)
                 resolve()
+                })
+            })
+        }
+
+        async function createYoutubeThumbnail() {
+            return new Promise((resolve, reject) => {
+                gm()
+                .in('./content/0-converted.png')
+                .write('./content/youtube-thumbnail.jpg', (error)=> {
+                    if(error) {
+                        return reject(error)
+                    }
+
+                    console.log('> Creating YouTube thumbnail')
+                    resolve()
                 })
             })
         }
