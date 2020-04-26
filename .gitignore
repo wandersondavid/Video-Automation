@@ -110,3 +110,10 @@ credentials/watson-nlu\.json
 credentials/algorithimia\.json
 
 content\.json
+
+credentials/search-google\.json
+
+package-lock\.json
+
+content
+
